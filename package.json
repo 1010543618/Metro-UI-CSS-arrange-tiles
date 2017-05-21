@@ -1,0 +1,11 @@
+{
+  "name": "metro-arrange-tiles-dist",
+  "version": "1.0.0",
+  "description": "Automatic arrangement tiles in the MetroUI's widgets' visualization module.",
+  "author": "zjf",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "metro-dist": "^3.0.17"
+  }
+}

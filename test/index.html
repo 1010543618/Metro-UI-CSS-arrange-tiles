@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HOME</title>
+
+    <link href="../node_modules/metro-dist/css/metro.css" rel="stylesheet">
+    <link href="../node_modules/metro-dist/css/metro-icons.css" rel="stylesheet">
+    <link href="../node_modules/metro-dist/css/metro-responsive.css" rel="stylesheet">
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/metro-dist/js/metro.js"></script>
+    <script src="../js/metro-arrange-tile.js"></script>
+    <style>
+    	.bg-grayTransparent {
+		    background-color: rgba(0,0,0,0.3) !important;
+		}
+		.tile-half{
+			width: 50%;
+			height: 100%;
+			float: left;
+		}
+		.tile-qtr{
+			width: 50%;
+			height: 50%;
+			float: left;
+		}
+		.tile-half, .tile-qtr{
+			box-sizing:border-box;
+			-moz-box-sizing:border-box; /* Firefox */
+			-webkit-box-sizing:border-box; /* Safari */
+			border: 1px solid #333;
+		}
+		.tile-half:hover, .tile-qtr:hover{
+			border: 1px solid rgba(255,255,255,0.5);
+		}
+    </style>
+    <script>
+    	$(function(){
+    		$('#tile-container').arrange_tile();
+    	});
+    </script>
+</head>
+<body class="bg-lightGreen">
+	<div id="tile-container" class="container clear-float" style="padding:100px">
+		<div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+		<div class="tile bg-grayTransparent fg-white tile-large">
+            <div class="tile-content iconic">
+                <div class="tile-content"><h1>empty</h1></div>
+            </div>
+        </div>
+		<div class="tile tile-wide fg-white">
+        	<div class="tile-content iconic">
+        		<div class="tile-half bg-cyan">博客</div>
+        		<div class="tile-half bg-cyan">
+        			<div class="tile-qtr bg-cyan">工具1</div>
+	                <div class="tile-qtr bg-orange">工具1</div>
+	                <div class="tile-qtr bg-red">工具1</div>
+	                <div class="tile-qtr bg-blue">工具1</div>
+        		</div>
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                API
+            </div>
+        </div>
+
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                APP
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                <div class="tile-qtr bg-cyan">登录</div>
+                <div class="tile-qtr bg-orange">注册</div>
+                <div class="tile-qtr bg-red">搞事情</div>
+                <div class="tile-qtr bg-blue">搞事情</div>
+            </div>
+        </div>
+
+        
+
+        <div class="tile-wide bg-orange fg-white">
+        	<div class="tile-content iconic">
+        		<div class="tile-half bg-cyan">工具</div>
+        		<div class="tile-half bg-cyan">
+        			<div class="tile-qtr bg-cyan">工具1</div>
+	                <div class="tile-qtr bg-orange">工具1</div>
+	                <div class="tile-qtr bg-red">工具1</div>
+	                <div class="tile-qtr bg-blue">工具1</div>
+        		</div>
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                APP
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                APP
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                APP
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                APP
+            </div>
+        </div>
+        <div class="tile bg-grayTransparent fg-white">
+            <div class="tile-content iconic">
+                APP
+            </div>
+        </div>
+	</div>
+</body>
+</html>
