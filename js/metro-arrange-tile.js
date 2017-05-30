@@ -30,14 +30,17 @@
                 default_weighting_mode : 'dom',
                 //使用权进行排序
                 arr_use_weight : true,
+                
                 //最小的tile是tile_halfsize的多少倍，默认是2倍（默认最小是tile_size），长或宽小于2倍的不会自动创建
                 min_tile_size : 2,
                 //tiles_wrap定义包裹tiles的div
                 tiles_wrap : '<section id="muat_tiles_warp"><section>',
                 //tiles对于包裹tiles的tiles_wrap的对齐方式，center，right，left
                 tiles_align : 'center',
+                //补齐的tile
                 create_tile_class : 'tile',
                 create_tile_content : '这里少一个tile哦！',
+                fill_last_col : true
             };
             var opts = null;
             var tiles_info = null;
@@ -115,10 +118,75 @@
         wall.x_length = wall.length;
         wall.y_length = wall[0].length;
         // 2.贴瓷砖
-        while(tiles_info.length > 0){
-            var $tile = stick_tile_on_wall(wall, status, tiles_info, $tiles, opts);
-            $tiles_wrap.append($tile);
+        while(true){
+            var result = stick_tile_on_wall(wall, status, tiles_info, opts);
+            $tiles_wrap.append(result.$tile);
+            if (result.finish) break;
         }
+    }
+
+    // 将瓷砖贴到墙上
+    function stick_tile_on_wall(wall, status, tiles_info, opts){
+        // 查找第一个空闲的位置
+        var notiled_pos = find_first_notiled(wall, status);
+        // 计算空闲大小
+        var notiled_size = get_notiled_size(notiled_pos, wall, status);
+        // 墙面数组填充大小
+        var fill_size = {x:0,y:0}
+        // 返回的瓷砖
+        var result = {$tile:null, finish:false};
+        if (tiles_info.length > 0) {
+            // 还有瓷砖，寻找合适的瓷砖
+            var tile_num = find_suitable_tile(notiled_size, tiles_info);
+            if (tile_num === -1) {
+                notiled_size.y = get_tiled_size({x:notiled_pos.x-1,y:notiled_pos.y}, wall, status).y;
+                // 空闲区域的x和y都比min_tile_size大才创建
+                fill_size.x = notiled_size.x;
+                fill_size.y = notiled_size.y;
+                if (notiled_size.x >= opts.min_tile_size && notiled_size.y >= opts.min_tile_size) {
+                    result.$tile = create_tile(notiled_size, opts.create_tile_class, opts.create_tile_content);
+                }
+            }else{
+                fill_size.x = tiles_info[tile_num].size.x;
+                fill_size.y = tiles_info[tile_num].size.y;
+                result.$tile = $(tiles_info[tile_num].dom);
+                tiles_info.splice(tile_num,1);
+            }
+        }else if(opts.fill_last_col && notiled_pos.x !== 0){
+            // 没有瓷砖，需要处理最后一行并且最后一行有空位
+            notiled_size.y = get_tiled_size({x:notiled_pos.x-1,y:notiled_pos.y}, wall, status).y;
+            if (notiled_size.x >= opts.min_tile_size && notiled_size.y >= opts.min_tile_size) {
+                // 最后一行要添加瓷砖
+                fill_size.x = opts.min_tile_size;
+                fill_size.y = opts.min_tile_size;
+                result.$tile = create_tile({x:opts.min_tile_size,y:opts.min_tile_size}, opts.create_tile_class, opts.create_tile_content);
+            }else{
+                // 最后一行不添加瓷砖
+                fill_size.x = notiled_size.x;
+                fill_size.y = notiled_size.y;
+                result.finish = true;
+            }
+        }else{
+            result.finish = true;
+        }
+        // 对墙面数组赋值
+        for (var x = notiled_pos.x, end_x = notiled_pos.x + fill_size.x; x < end_x; x++) {
+            for (var y = notiled_pos.y, end_y = notiled_pos.y + fill_size.y; y < end_y; y++) {
+                wall[x][y] = status.tiled;
+            }
+        }
+        // 返回瓷砖
+        if (opts.locate_mode === 'absolute') {
+            if (result.$tile !== null) {
+                result.$tile.css({
+                    position : 'absolute',
+                    float : 'none',
+                    left : (opts.is_small_screen === true ? notiled_pos.x * opts.m_col_width : notiled_pos.x * opts.col_width)+ 'px',
+                    top : (opts.is_small_screen === true ? notiled_pos.y * opts.m_col_width : notiled_pos.y * opts.col_width)+ 'px',
+                });
+            }
+        }
+        return result;
     }
 
     // 找出有多少列
@@ -137,7 +205,7 @@
             tile.dom = this;
             tile.size = get_tile_scale($(this));
             tile.weight = $(this).attr('mat-weight') ? $(this).attr('mat-weight') : default_weight--;
-            if (tile.size.x <= opts.col_num) {
+            if (tile.size.x <= opts.col_num && tile.size.x >= opts.min_tile_size) {
                 tiles_arr.push(tile);
             }
         });
@@ -253,51 +321,7 @@
         return tile_scale;
     }
 
-    // 将瓷砖贴到墙上
-    function stick_tile_on_wall(wall, status, tiles_info, $tiles, opts){
-        // 查找第一个空闲的位置
-        var notiled_pos = find_first_notiled(wall, status);
-        // 计算空闲大小
-        var notiled_size = get_notiled_size(notiled_pos, wall, status);
-        // 寻找合适的瓷砖
-        var tile_num = find_suitable_tile(notiled_size, tiles_info);
-        var end_x = 0;
-        var end_y = 0;
-        var $tile = null;
-        if (tile_num === -1) {
-            notiled_size.y = get_tiled_size({x:notiled_pos.x-1,y:notiled_pos.y}, wall, status).y;
-            end_x = notiled_pos.x+notiled_size.x;
-            end_y = notiled_pos.y+notiled_size.y;
-            // 空闲区域的x和y都比min_tile_size大才创建
-            if (notiled_size.x >= opts.min_tile_size && notiled_size.y >= opts.min_tile_size) {
-                $tile = create_tile(notiled_size, opts.create_tile_class, opts.create_tile_content);
-            }
-            
-        }else{
-            end_x = notiled_pos.x+tiles_info[tile_num].size.x;
-            end_y = notiled_pos.y+tiles_info[tile_num].size.y;
-            $tile = $(tiles_info[tile_num].dom);
-            tiles_info.splice(tile_num,1);
-        }
-        // 对墙面数组赋值
-        for (var x = notiled_pos.x; x < end_x; x++) {
-            for (var y = notiled_pos.y; y < end_y; y++) {
-                wall[x][y] = status.tiled;
-            }
-        }
-        // 返回瓷砖
-        if (opts.locate_mode === 'absolute') {
-            if ($tile !== null) {
-                $tile.css({
-                    position : 'absolute',
-                    float : 'none',
-                    left : (opts.is_small_screen === true ? notiled_pos.x * opts.m_col_width : notiled_pos.x * opts.col_width)+ 'px',
-                    top : (opts.is_small_screen === true ? notiled_pos.y * opts.m_col_width : notiled_pos.y * opts.col_width)+ 'px',
-                });
-            }
-        }
-        return $tile;
-    }
+    
 
     function find_first_notiled(wall, status){
         for (var y = 0; y < wall.y_length; y++) {
