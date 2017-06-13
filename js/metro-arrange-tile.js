@@ -1,8 +1,15 @@
 /**
  * MetroUI-arrange-tile
  */
-//闭包限定命名空间
-(function ($) {
+;(function(factory) {        
+    if (typeof define === "function" && define.amd) {            
+        // AMD模式         
+        define(["jquery"], factory);
+    } else {            
+        // 全局模式           
+        factory(jQuery);
+    }    
+}(function ($) {
     $.fn.extend({
         "arrange_tile": function (options) {
             //默认参数
